@@ -17,37 +17,61 @@
   <button class="music-toggle" id="musicToggle" type="button" aria-label="Музыканы қосу немесе тоқтату" title="Музыканы қосу / тоқтату">
     <span class="music-icon">♫</span><span class="music-label">Музыка</span>
   </button>
-  <!-- Положите файл music.mp3 в ту же папку, где лежит index.html -->
   <audio id="backgroundMusic" src="audio.mpeg" loop preload="auto"></audio>
 
   <main>
-    <section class="intro" id="intro" aria-label="Елу есік">
+    <section class="intro" id="intro" aria-label="Сарай және елу есік">
       <div class="intro-ornament ornament-top">❧ ❖ ❧</div>
       <p class="intro-kicker">ЕРЕКШЕ КҮНГЕ АРНАЛҒАН ШАҚЫРУ</p>
 
       <div class="palace-viewport">
         <div class="palace" id="palace">
-          <div class="palace-roof">
-            <span class="roof-emblem">❖</span>
-            <span class="roof-line"></span>
-            <span class="roof-caption">ІЗТАЙ ӘУЛЕТІ</span>
+          <div class="palace-crown">
+            <div class="crown-crest">❖</div>
+            <div class="palace-roof">
+              <span class="roof-emblem">❧</span>
+              <span class="roof-line"></span>
+              <span class="roof-caption">ІЗТАЙ ӘУЛЕТІ</span>
+              <span class="roof-line"></span>
+              <span class="roof-emblem">❧</span>
+            </div>
           </div>
+
           <div class="palace-columns">
-            <div class="column"></div>
-            <div class="door-grid" id="doorGrid" aria-label="50 есік"></div>
-            <div class="column"></div>
+            <div class="column-pillar">
+              <div class="pillar-cap"></div>
+              <div class="pillar-shaft"></div>
+              <div class="pillar-base"></div>
+            </div>
+
+            <div class="facade-body">
+              <div class="door-grid" id="doorGrid" aria-label="50 есік"></div>
+            </div>
+
+            <div class="column-pillar">
+              <div class="pillar-cap"></div>
+              <div class="pillar-shaft"></div>
+              <div class="pillar-base"></div>
+            </div>
           </div>
-          <div class="palace-base"><span>✧</span> ✧ <span>✧</span></div>
+
+          <div class="palace-balustrade">
+            <div class="balustrade-rails"></div>
+            <div class="palace-base"><span>✧</span> ❖ <span>✧</span></div>
+          </div>
         </div>
       </div>
 
-      <!-- Крупный план 50-й двери перед открытием -->
+      <!-- Крупный план 50-й двери с 3D-открытием и светом Champagne Gold -->
       <div class="door-closeup-stage" id="doorCloseupStage" aria-hidden="true">
-        <div class="closeup-frame" id="closeupFrame">
-          <div class="closeup-panel" id="closeupPanel">
-            <span class="closeup-ornament">❧</span>
-            <span class="closeup-number">50</span>
-            <span class="closeup-knob"></span>
+        <div class="closeup-arch">
+          <div class="closeup-light-beam" id="closeupLightBeam"></div>
+          <div class="closeup-frame" id="closeupFrame">
+            <div class="closeup-panel" id="closeupPanel">
+              <span class="closeup-ornament">❖</span>
+              <span class="closeup-number">50</span>
+              <span class="closeup-knob" id="closeupKnob"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -91,7 +115,6 @@
           <h2>Естеліктер</h2>
         </div>
         <div class="photo-card">
-          <!-- Положите фото под именем father.jpg в папку с сайтом -->
           <img id="fatherPhoto" class="father-photo" src="WhatsApp Image 2026-11-27 at 16.39.51.jpeg" alt="Мейірбектің бала кездегі фотосуреті">
         </div>
       </section>
