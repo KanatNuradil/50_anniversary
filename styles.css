@@ -1,7 +1,7 @@
 - { box-sizing: border-box; }
 :root {
   --wine: #30121d; --burgundy: #641c2b; --gold: #a67c43;
-  --champagne: #d9b979; --champagne-glow: #fff3d1; --ivory: #fffdf7; --beige: #f3ebdd;
+  --champagne: #d9b979; --champagne-glow: #fff5d9; --ivory: #fffdf7; --beige: #f3ebdd;
   --ink: #3c2930; --muted: #806b68;
 }
 html { scroll-behavior: smooth; }
@@ -28,6 +28,7 @@ body {
   min-height: 100svh; padding: 34px 18px 28px; position: relative; overflow: hidden;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   color: var(--ivory); text-align: center;
+  perspective: 1200px;
 }
 .intro::before, .intro::after {
   content: "❧ ❖ ❧"; position: absolute; color: rgba(217,185,121,.22);
@@ -37,18 +38,18 @@ body {
 .intro::after { bottom: 8%; right: -30px; transform: rotate(145deg); }
 .intro-ornament { color: var(--champagne); opacity: .8; letter-spacing: .35em; font-size: 24px; }
 .intro-kicker, .eyebrow { font-size: 10px; letter-spacing: .25em; line-height: 1.8; }
-.intro-kicker { color: var(--champagne); margin: 12px 0 18px; }
+.intro-kicker { color: var(--champagne); margin: 12px 0 16px; }
+
+.mansion-wrapper {
+  transform-origin: 50% 86%;
+  will-change: transform, opacity;
+}
 
 .palace {
   width: min(760px, 96vw); padding: 15px 18px 14px; position: relative;
   background: linear-gradient(135deg, #fff9eb, #e9d9bf 48%, #f8f0e2);
   border: 2px solid var(--champagne); outline: 1px solid rgba(217,185,121,.4); outline-offset: 5px;
   box-shadow: 0 22px 65px #10070bb0, inset 0 0 30px #b18b4d35;
-  transform: translateY(0);
-  transition: transform 3.8s cubic-bezier(.22, .12, .25, 1), opacity 1s ease;
-}
-.palace.pan-to-50 {
-  transform: translateY(-10%);
 }
 .palace::before, .palace::after {
   content: ""; position: absolute; top: 0; bottom: 0; width: 7px;
@@ -67,26 +68,38 @@ body {
 
 .door {
   aspect-ratio: .78 / 1; min-height: 34px; position: relative; perspective: 650px;
-  background: #4b1b29; border: 1px solid #c8a45f; padding: 3px; opacity: 0;
-  transform: translateY(10px); transition: opacity .6s ease, transform .6s ease, filter .7s ease;
+  background: #4b1b29; border: 1px solid #c8a45f; padding: 3px;
 }
-.door.visible { opacity: 1; transform: translateY(0); }
-.palace.spotlight-50 .door:not(.special) { filter: brightness(.72); }
-
 .door-frame {
   height: 100%; width: 100%; position: relative; border: 1px solid #d6b66f; padding: 3px;
-  background: radial-gradient(circle at 50% 45%, #fff5d6 0%, var(--champagne-glow) 65%, #e6c68a 100%);
-  box-shadow: inset 0 0 12px rgba(255, 243, 209, .85);
+  background: radial-gradient(circle at 50% 45%, #ffffff 0%, var(--champagne-glow) 55%, #e6c68a 100%);
+  box-shadow: inset 0 0 14px rgba(255, 245, 217, .95);
+  overflow: hidden;
+}
+.door-inner-glimpse {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 40%, #fffdf7 0%, #f3e4c3 65%, #d9b979 100%);
+  color: var(--burgundy);
+  font: 600 9px/1.2 "Cormorant Garamond", serif;
+  letter-spacing: .04em;
+  text-align: center;
+  padding: 4px;
 }
 .door-panel {
   position: absolute; inset: 3px; transform-origin: left center; transform-style: preserve-3d;
-  transition: transform 2.1s cubic-bezier(.2, .72, .18, 1); border: 1px solid #bd9653;
+  border: 1px solid #bd9653;
   background:
     radial-gradient(ellipse at 50% 22%, #8a4050 0, transparent 42%),
     repeating-linear-gradient(0deg, transparent 0 12px, #d4ae6730 12px 13px),
     linear-gradient(120deg, #762d3c, #4b1726 60%, #682638);
   box-shadow: inset 0 0 9px #1b0910, 1px 2px 4px #18070b;
   backface-visibility: hidden;
+  will-change: transform;
 }
 .door-panel::before {
   content: "❧"; position: absolute; top: 15%; left: 50%; transform: translateX(-50%);
@@ -95,9 +108,7 @@ body {
 .door-panel::after {
   content: ""; position: absolute; right: 11%; top: 50%; width: 4px; height: 4px;
   border-radius: 50%; background: #f1d28b; box-shadow: 0 0 5px #fff0bd;
-  transition: transform .45s ease;
 }
-.door.handle-turn .door-panel::after { transform: scale(1.45); box-shadow: 0 0 10px #fff6d6; }
 
 .door-number {
   position: absolute; bottom: 4px; left: 0; right: 0;
@@ -105,9 +116,8 @@ body {
   text-shadow: 0 1px 3px rgba(0, 0, 0, .85); z-index: 2; pointer-events: none;
 }
 
-/* Отдельная 50-я дверь внизу по центру */
 .door-50-slot {
-  width: clamp(78px, 16vw, 114px);
+  width: clamp(82px, 16vw, 118px);
   display: flex;
   justify-content: center;
   margin-top: 2px;
@@ -115,17 +125,14 @@ body {
 .door.special {
   width: 100%;
   aspect-ratio: .82 / 1;
-  box-shadow: 0 0 16px #e4bd6c99;
-  transition: opacity .65s ease, transform 1.25s cubic-bezier(.22, 1, .36, 1), box-shadow .7s ease;
-}
-.door.special.focused {
-  transform: scale(1.22) translateY(-4px);
-  box-shadow: 0 0 28px rgba(255, 243, 209, .95), 0 0 52px rgba(217, 185, 121, .75);
-  z-index: 10;
+  box-shadow: 0 0 18px #e4bd6c99;
 }
 .door.special .door-frame { border: 2px solid #f0d18a; }
 .door.special .door-number { color: #fff0c2; font-weight: 700; font-size: clamp(12px, 1.8vw, 17px); }
-.door.opening .door-panel { transform: rotateY(-112deg); }
+.door.special .door-inner-glimpse {
+  font-size: clamp(8px, 1.15vw, 11px);
+  box-shadow: inset 0 0 18px rgba(255, 245, 217, 1);
+}
 
 .palace-base { color: var(--gold); letter-spacing: 1em; padding: 8px 0 0; font-size: 12px; }
 .intro-ornament.ornament-bottom { margin-top: 14px; }
@@ -137,9 +144,8 @@ body {
 .skip-intro:hover { background: var(--champagne); color: var(--wine); }
 
 /* Единый шрифт для «шақыру» и «Мейірбек» */
-.invitation { display: none; background: var(--ivory); font-family: "Montserrat", sans-serif; }
-.invitation.show { display: block; animation: reveal .95s ease both; }
-@keyframes reveal { from { opacity: 0; filter: brightness(1.65); } to { opacity: 1; filter: brightness(1); } }
+.invitation { display: none; opacity: 0; background: var(--ivory); font-family: "Montserrat", sans-serif; }
+.invitation.show { display: block; opacity: 1; }
 .hero {
   padding: 70px 20px; min-height: 590px; display: grid; place-items: center; text-align: center;
   background:
@@ -219,7 +225,7 @@ body {
   .door-panel { inset: 2px; }
   .door-number { font-size: 9px; bottom: 3px; }
   .door-panel::after { width: 3px; height: 3px; }
-  .door-50-slot { width: clamp(64px, 22vw, 84px); }
+  .door-50-slot { width: clamp(68px, 22vw, 88px); }
   .palace-base { padding-top: 5px; font-size: 9px; }
   .hero { min-height: 520px; padding: 55px 18px; }
   .hero-frame { padding: 34px 12px; }
