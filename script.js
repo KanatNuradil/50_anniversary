@@ -101,7 +101,7 @@ phoneInput.addEventListener("input", e => {
 
 // 6. Отправка ответов формы в Google Sheets
 // Вставьте сюда URL вашего развернутого веб-приложения Google Apps Script:
-const GOOGLE_SHEETS_WEB_APP_URL = "https://script.google.com/macros/s/ВСТАВЬТЕ_ВАШ_ID/exec";
+const GOOGLE_SHEETS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyBRpJYWDT3k6zUMlkNpLr-FP4ac3L3WnZIRPxlyqUENaoAC0GwBD3EgbJGgqJNLvVP/exec";
 
 const rsvpForm = document.getElementById("rsvpForm");
 const formMessage = document.getElementById("formMessage");
