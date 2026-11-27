@@ -1,4 +1,4 @@
-- { box-sizing: border-box; }
+* { box-sizing: border-box; }
 :root {
   --wine: #30121d; --burgundy: #641c2b; --gold: #a67c43;
   --champagne: #d9b979; --champagne-glow: #fff5d9; --ivory: #fffdf7; --beige: #f3ebdd;
@@ -25,10 +25,10 @@ body {
 @keyframes musicPulse { 50% { transform: scale(1.22); text-shadow: 0 0 12px var(--champagne); } }
 
 .intro {
-  min-height: 100svh; padding: 34px 18px 28px; position: relative; overflow: hidden;
+  position: fixed; inset: 0; width: 100vw; height: 100svh;
+  padding: 28px 16px 24px; overflow: hidden;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  color: var(--ivory); text-align: center;
-  perspective: 1200px;
+  color: var(--ivory); text-align: center; z-index: 20;
 }
 .intro::before, .intro::after {
   content: "❧ ❖ ❧"; position: absolute; color: rgba(217,185,121,.22);
@@ -36,17 +36,21 @@ body {
 }
 .intro::before { top: 9%; left: -30px; transform: rotate(-35deg); }
 .intro::after { bottom: 8%; right: -30px; transform: rotate(145deg); }
-.intro-ornament { color: var(--champagne); opacity: .8; letter-spacing: .35em; font-size: 24px; }
+.intro-ornament { color: var(--champagne); opacity: .8; letter-spacing: .35em; font-size: 22px; }
 .intro-kicker, .eyebrow { font-size: 10px; letter-spacing: .25em; line-height: 1.8; }
-.intro-kicker { color: var(--champagne); margin: 12px 0 16px; }
+.intro-kicker { color: var(--champagne); margin: 10px 0 14px; opacity: 0; }
 
+/* Фокус камеры ровно на парадную 50-ю дверь снизу по центру */
 .mansion-wrapper {
-  transform-origin: 50% 86%;
+  position: relative;
+  width: min(94vw, 520px);
+  transform-origin: 50% 88%;
   will-change: transform, opacity;
+  z-index: 10;
 }
 
 .palace {
-  width: min(760px, 96vw); padding: 15px 18px 14px; position: relative;
+  width: 100%; padding: 13px 16px 12px; position: relative;
   background: linear-gradient(135deg, #fff9eb, #e9d9bf 48%, #f8f0e2);
   border: 2px solid var(--champagne); outline: 1px solid rgba(217,185,121,.4); outline-offset: 5px;
   box-shadow: 0 22px 65px #10070bb0, inset 0 0 30px #b18b4d35;
@@ -56,96 +60,121 @@ body {
   background: repeating-linear-gradient(180deg, #a67c43 0 5px, #e3c98f 5px 8px);
 }
 .palace::before { left: 5px; } .palace::after { right: 5px; }
-.palace-roof { height: 43px; display: flex; align-items: center; justify-content: center; gap: 14px; color: var(--gold); }
-.roof-emblem { font-size: 25px; }
-.roof-line { height: 1px; width: 22%; background: linear-gradient(90deg, transparent, var(--gold)); }
-.roof-line + .roof-caption { font: 10px "Montserrat"; letter-spacing: .25em; }
-.palace-columns { display: grid; grid-template-columns: 13px 1fr 13px; gap: 9px; align-items: stretch; }
+.palace-roof { height: 38px; display: flex; align-items: center; justify-content: center; gap: 12px; color: var(--gold); }
+.roof-emblem { font-size: 22px; }
+.roof-line { height: 1px; width: 20%; background: linear-gradient(90deg, transparent, var(--gold)); }
+.roof-caption { font: 600 10px "Montserrat"; letter-spacing: .25em; }
+.palace-columns { display: grid; grid-template-columns: 11px 1fr 11px; gap: 8px; align-items: stretch; }
 .column { border: 1px solid #b38d50; background: repeating-linear-gradient(90deg, #d9c49e 0 4px, #f8f0df 4px 8px); box-shadow: inset 0 0 6px #9e783d; }
 
-.facade-center { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
-.door-grid { width: 100%; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: clamp(4px, .7vw, 8px); }
+.facade-center { width: 100%; }
 
-.door {
-  aspect-ratio: .78 / 1; min-height: 34px; position: relative; perspective: 650px;
-  background: #4b1b29; border: 1px solid #c8a45f; padding: 3px;
+/* Ровно 7 дверей в ряду (7x7 = 49) и по центру снизу парадная 50-я */
+#doors-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  align-items: end;
 }
-.door-frame {
-  height: 100%; width: 100%; position: relative; border: 1px solid #d6b66f; padding: 3px;
-  background: radial-gradient(circle at 50% 45%, #ffffff 0%, var(--champagne-glow) 55%, #e6c68a 100%);
-  box-shadow: inset 0 0 14px rgba(255, 245, 217, .95);
-  overflow: hidden;
+
+.door-slot {
+  aspect-ratio: 3 / 4.1;
+  background: linear-gradient(180deg, #6b2535 0%, #431422 100%);
+  border: 1px solid #c8a45f;
+  border-radius: 14px 14px 1px 1px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f6dc9c;
+  font-size: clamp(10px, 1.4vw, 13px);
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .75);
+  box-shadow: inset 0 2px 5px rgba(24, 6, 12, .55);
 }
-.door-inner-glimpse {
+.door-slot::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(217, 185, 121, .28);
+  border-radius: 10px 10px 0 0;
+  pointer-events: none;
+}
+
+/* ПАРАДНАЯ 50-Я ДВЕРЬ ПО ЦЕНТРУ ВНИЗУ */
+.door-slot.door-50 {
+  grid-column: 3 / 6;
+  aspect-ratio: 1.45 / 1;
+  border: 2px solid #f5df8e;
+  border-radius: 26px 26px 2px 2px;
+  background: radial-gradient(circle, #ffffff 12%, #fff5d9 60%, #d9b979 100%);
+  box-shadow:
+    0 0 24px rgba(245, 223, 142, .85),
+    0 0 46px rgba(217, 185, 121, .55);
+  cursor: pointer;
+  perspective: 900px;
+  z-index: 5;
+}
+.door-slot.door-50::after { display: none; }
+
+.door-leaf {
   position: absolute;
   inset: 0;
+  background: radial-gradient(circle at 50% 45%, #8a2638 0%, #4b1524 85%);
+  border: 2px solid #f5df8e;
+  border-radius: 23px 23px 0 0;
+  transform-origin: left center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at 50% 40%, #fffdf7 0%, #f3e4c3 65%, #d9b979 100%);
-  color: var(--burgundy);
-  font: 600 9px/1.2 "Cormorant Garamond", serif;
-  letter-spacing: .04em;
-  text-align: center;
-  padding: 4px;
-}
-.door-panel {
-  position: absolute; inset: 3px; transform-origin: left center; transform-style: preserve-3d;
-  border: 1px solid #bd9653;
-  background:
-    radial-gradient(ellipse at 50% 22%, #8a4050 0, transparent 42%),
-    repeating-linear-gradient(0deg, transparent 0 12px, #d4ae6730 12px 13px),
-    linear-gradient(120deg, #762d3c, #4b1726 60%, #682638);
-  box-shadow: inset 0 0 9px #1b0910, 1px 2px 4px #18070b;
-  backface-visibility: hidden;
+  color: #fff3d1;
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, .6);
+  transition: filter .3s ease;
   will-change: transform;
 }
-.door-panel::before {
-  content: "❧"; position: absolute; top: 15%; left: 50%; transform: translateX(-50%);
-  color: #d9b979; font-size: clamp(7px, 1.3vw, 13px); text-shadow: 0 0 4px #f3dca3;
-}
-.door-panel::after {
-  content: ""; position: absolute; right: 11%; top: 50%; width: 4px; height: 4px;
-  border-radius: 50%; background: #f1d28b; box-shadow: 0 0 5px #fff0bd;
-}
+.door-50:hover .door-leaf { filter: brightness(1.14); }
 
-.door-number {
-  position: absolute; bottom: 4px; left: 0; right: 0;
-  color: #f3d796; font: 600 clamp(9.5px, 1.45vw, 14.5px)/1 "Montserrat", sans-serif;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, .85); z-index: 2; pointer-events: none;
+.door-50-number {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(22px, 3.6vw, 28px);
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, .8);
 }
-
-.door-50-slot {
-  width: clamp(82px, 16vw, 118px);
-  display: flex;
-  justify-content: center;
+.door-50-sub {
+  font-size: 7.5px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--champagne);
   margin-top: 2px;
 }
-.door.special {
-  width: 100%;
-  aspect-ratio: .82 / 1;
-  box-shadow: 0 0 18px #e4bd6c99;
-}
-.door.special .door-frame { border: 2px solid #f0d18a; }
-.door.special .door-number { color: #fff0c2; font-weight: 700; font-size: clamp(12px, 1.8vw, 17px); }
-.door.special .door-inner-glimpse {
-  font-size: clamp(8px, 1.15vw, 11px);
-  box-shadow: inset 0 0 18px rgba(255, 245, 217, 1);
+.door-leaf::after {
+  content: "";
+  position: absolute;
+  right: 8px;
+  top: 52%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff3d1;
+  box-shadow: 0 0 6px #fff;
 }
 
-.palace-base { color: var(--gold); letter-spacing: 1em; padding: 8px 0 0; font-size: 12px; }
-.intro-ornament.ornament-bottom { margin-top: 14px; }
+.palace-base { color: var(--gold); letter-spacing: 1em; padding: 7px 0 0; font-size: 11px; }
+.intro-ornament.ornament-bottom { margin-top: 12px; }
 .skip-intro {
-  margin-top: 10px; border: 1px solid #d9b979; color: var(--champagne); background: transparent;
-  padding: 9px 22px; border-radius: 30px; font: 11px "Montserrat"; letter-spacing: .1em; cursor: pointer;
-  transition: background .25s, color .25s;
+  margin-top: 12px; border: 1px solid #d9b979; color: var(--wine);
+  background: linear-gradient(135deg, #f5df8e 0%, #d9b979 55%, #b38a46 100%);
+  padding: 11px 26px; border-radius: 30px; font: 600 11px "Montserrat"; letter-spacing: .12em;
+  text-transform: uppercase; cursor: pointer; opacity: 0; z-index: 25;
+  box-shadow: 0 8px 24px rgba(217, 185, 121, .4);
+  transition: transform .25s, box-shadow .25s;
 }
-.skip-intro:hover { background: var(--champagne); color: var(--wine); }
+.skip-intro:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(245, 223, 142, .6); }
 
-/* Единый шрифт для «шақыру» и «Мейірбек» */
+/* ПРИГЛАСИТЕЛЬНЫЙ (СЦЕНА 2) */
 .invitation { display: none; opacity: 0; background: var(--ivory); font-family: "Montserrat", sans-serif; }
-.invitation.show { display: block; opacity: 1; }
 .hero {
   padding: 70px 20px; min-height: 590px; display: grid; place-items: center; text-align: center;
   background:
@@ -192,7 +221,7 @@ body {
 .venue-note { font: 13px/1.6 "Cormorant Garamond"; color: var(--muted); }
 .late-note { max-width: 690px; margin: 28px auto 0; font: 18px/1.8 "Cormorant Garamond"; }
 .rsvp-section { background: #f5ecdf; max-width: none; }
-.rsvp-section > .section-heading, .rsvp-intro, .rsvp-form, .privacy-note { max-width: 590px; margin-left: auto; margin-right: auto; }
+.rsvp-section > .section-heading, .rsvp-intro, .rsvp-form { max-width: 590px; margin-left: auto; margin-right: auto; }
 .rsvp-intro { text-align: center; font: 17px/1.7 "Cormorant Garamond"; margin-bottom: 25px; }
 .rsvp-form { display: flex; flex-direction: column; gap: 10px; }
 .rsvp-form > label, .rsvp-form legend { font-size: 11px; color: var(--burgundy); letter-spacing: .05em; font-weight: 600; margin-top: 8px; }
@@ -206,8 +235,8 @@ body {
 .radio-option input { accent-color: var(--burgundy); }
 .submit-button { margin-top: 10px; padding: 16px; background: var(--burgundy); color: var(--ivory); border: 1px solid var(--gold); cursor: pointer; font: 12px "Montserrat"; letter-spacing: .12em; }
 .submit-button span { color: var(--champagne); margin-left: 8px; }
-.form-message { min-height: 20px; text-align: center; color: #47634a; font-size: 12px; }
-.privacy-note { font-size: 10px; line-height: 1.6; color: #8b7771; text-align: center; margin-top: 18px; }
+.submit-button:disabled { opacity: .65; cursor: wait; }
+.form-message { min-height: 20px; text-align: center; color: #47634a; font-size: 12px; font-weight: 500; }
 .footer { padding: 50px 20px; text-align: center; color: var(--ivory); background: var(--wine); }
 .footer-ornament { color: var(--champagne); font-size: 28px; }
 .footer p { font: 20px "Cormorant Garamond"; }
@@ -215,17 +244,13 @@ body {
 .footer small { color: #d7c5b5; letter-spacing: .2em; font-size: 9px; }
 
 @media (max-width: 620px) {
-  .intro { padding-top: 56px; min-height: 100svh; }
-  .palace { padding: 9px 11px 10px; width: 98vw; }
-  .palace-roof { height: 31px; gap: 8px; }
-  .palace-columns { grid-template-columns: 6px 1fr 6px; gap: 4px; }
-  .door-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 3.5px; }
-  .door { min-height: 28px; padding: 2px; }
-  .door-frame { padding: 2px; }
-  .door-panel { inset: 2px; }
-  .door-number { font-size: 9px; bottom: 3px; }
-  .door-panel::after { width: 3px; height: 3px; }
-  .door-50-slot { width: clamp(68px, 22vw, 88px); }
+  .intro { padding-top: 48px; }
+  .palace { padding: 10px 10px 10px; }
+  .palace-roof { height: 30px; gap: 8px; }
+  .palace-columns { grid-template-columns: 7px 1fr 7px; gap: 5px; }
+  #doors-grid { gap: 4.5px; }
+  .door-slot { font-size: 9.5px; border-radius: 10px 10px 1px 1px; }
+  .door-50-number { font-size: 20px; }
   .palace-base { padding-top: 5px; font-size: 9px; }
   .hero { min-height: 520px; padding: 55px 18px; }
   .hero-frame { padding: 34px 12px; }
@@ -236,7 +261,4 @@ body {
   .details-grid { grid-template-columns: 1fr; }
   .detail-card { padding: 20px; }
   .music-toggle { top: 10px; right: 10px; padding: 8px 11px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
