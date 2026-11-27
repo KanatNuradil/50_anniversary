@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#30121d">
+  <title>Мейірбек — 50 жас мерейтойына шақыру</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Marck+Script&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"></div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+
+  <button class="music-toggle" id="musicToggle" type="button" aria-label="Музыканы қосу немесе тоқтату" title="Музыканы қосу / тоқтату">
+    <span class="music-icon">♫</span><span class="music-label">Музыка</span>
+  </button>
+  <audio id="backgroundMusic" loop></audio>
+
+  <main>
+    <section class="intro" id="intro" aria-label="Елу есік">
+      <div class="intro-ornament ornament-top">❧ ❖ ❧</div>
+      <p class="intro-kicker">ЕРЕКШЕ КҮНГЕ АРНАЛҒАН ШАҚЫРУ</p>
+      <h1 class="intro-title">Елу есік — бір мереке</h1>
+      <p class="intro-subtitle">Өзіңізге арналған есікті ашыңыз</p>
+
+      <div class="palace">
+        <div class="palace-roof">
+          <span class="roof-emblem">❖</span>
+          <span class="roof-line"></span>
+          <span class="roof-caption">ІЗТАЙ ӘУЛЕТІ</span>
+        </div>
+        <div class="palace-columns">
+          <div class="column"></div>
+          <div class="door-grid" id="doorGrid" aria-label="50 есік"></div>
+          <div class="column"></div>
+        </div>
+        <div class="palace-base"><span>✧</span> ✧ <span>✧</span></div>
+      </div>
+      <p class="intro-hint" id="introHint">50-нөмірлі есік сізді күтуде</p>
+      <div class="intro-ornament ornament-bottom">❧　✦　❧</div>
+      <button class="skip-intro" id="skipIntro" type="button">Шақыруды ашу</button>
+    </section>
+
+    <section class="invitation" id="invitation" aria-hidden="true">
+      <header class="hero">
+        <div class="hero-frame">
+          <p class="eyebrow">ІЗТАЙ ӘУЛЕТІНЕН АҚ ДАСТАРҚАНҒА ШАҚЫРУ</p>
+          <div class="hero-ornament">❧ ❖ ❧</div>
+          <h2>Мерейтойға<br><span>шақыру</span></h2>
+          <div class="gold-rule"><i></i></div>
+          <p class="hero-name">Мейірбек</p>
+          <p class="hero-age">50 жас</p>
+          <p class="hero-date">27 желтоқсан · 17:00</p>
+          <div class="hero-ornament bottom">❧ ❖ ❧</div>
+        </div>
+      </header>
+
+      <section class="welcome section-shell">
+        <div class="section-heading">
+          <span class="small-ornament">✧</span>
+          <p class="eyebrow">ҚАДІРЛІ ҚОНАҒЫМЫЗ</p>
+          <h2>Сіздерді күтеміз</h2>
+          <span class="small-ornament">✧</span>
+        </div>
+        <p class="welcome-text">
+          Құрметті ағайын-туыс, бауырлар, құда-жекжат,<br class="desktop-break">
+          дос-жаран, көршілер! Сіздерді асқар тау әкеміз Мейірбектің
+          50 жас мерейтойына арналған ақ дастарханымыздың
+          қадірлі қонағы болуға шақырамыз!
+        </p>
+      </section>
+
+      <section class="memory section-shell">
+        <div class="section-heading">
+          <p class="eyebrow">ӨМІР ЖОЛЫНАН БІР БЕЛЕС</p>
+          <h2>Естеліктер</h2>
+        </div>
+        <div class="photo-card">
+          <div class="photo-placeholder" id="photoPlaceholder">
+            <span class="photo-ornament">❧</span>
+            <span class="photo-symbol">✧</span>
+            <strong>Мейірбектің бала кездегі суреті</strong>
+            <small>Әкеңіздің фотосуретін осы жерге жүктеңіз</small>
+          </div>
+          <img id="fatherPhoto" class="father-photo" alt="Мейірбектің бала кездегі фотосуреті" hidden>
+          <label class="upload-button" for="photoUpload">📷 Суретті жүктеу</label>
+          <input id="photoUpload" type="file" accept="image/*" hidden>
+        </div>
+      </section>
+
+      <section class="story section-shell">
+        <div class="section-heading">
+          <p class="eyebrow">ЖҮРЕКТЕН ШЫҚҚАН АҚ ТІЛЕК</p>
+          <h2>Құрметті қонақтар!</h2>
+        </div>
+        <div class="story-card">
+          <p>Елу жас — бұл жай ғана сан емес. Бұл — елу көктем мен елу күз, дастарқан басындағы мыңдаған сырлы әңгіме, бірге өткерген сапарлар, тек өзіміз ғана түсінетін әзілдер мен осы жолды мәнді еткен жақын жандар.</p>
+          <p>Осы белесті ешбір ресми сөзсіз, жасандылықсыз, тек ең жақын адамдардың ортасында атап өткіміз келеді. Сіздерді жылы жүздесу, әдемі ән, өткен күндердің фотосуреттері мен шын жүректен айтылар ақ тілектер күтеді.</p>
+          <p class="signature">Ізгі ниетпен,<br><span>Ізтай әулеті</span></p>
+        </div>
+      </section>
+
+      <section class="event-details section-shell">
+        <div class="section-heading">
+          <p class="eyebrow">КҮНІ МЕН ОРНЫ</p>
+          <h2>Мерекелік кеш</h2>
+        </div>
+        <div class="details-grid">
+          <article class="detail-card">
+            <span class="detail-icon">✧</span>
+            <p class="detail-label">Күні</p>
+            <h3>27 желтоқсан</h3>
+          </article>
+          <article class="detail-card">
+            <span class="detail-icon">◷</span>
+            <p class="detail-label">Басталуы</p>
+            <h3>17:00</h3>
+          </article>
+          <article class="detail-card venue-card">
+            <span class="detail-icon">⌖</span>
+            <p class="detail-label">Өтетін орны</p>
+            <h3>Ресторан «Веранда»</h3>
+            <p class="venue-note">Сіздерді жайлы әрі мерекелік көңіл-күйде күтеміз</p>
+            <!-- Қажет болса, осы жерге 2GIS/Google Maps сілтемесін қосыңыз -->
+          </article>
+        </div>
+        <p class="late-note">Тойдың басталуы сағат 17:00-де. Асықпай, бірақ тез-тез келіңіздер! Орын бәріңізге жетеді, бастысы — көтеріңкі көңіл-күймен жетсеңіздер болғаны.</p>
+      </section>
+
+      <section class="rsvp-section section-shell">
+        <div class="section-heading">
+          <p class="eyebrow">СІЗДІҢ ЖАУАБЫҢЫЗ БІЗ ҮШІН МАҢЫЗДЫ</p>
+          <h2>Келетініңізді растаңыз</h2>
+        </div>
+        <p class="rsvp-intro">Дастарқан басында қанша қонақ болатынын алдын ала білу біз үшін өте маңызды.</p>
+        <form id="rsvpForm" class="rsvp-form">
+          <label for="guestName">Аты-жөніңіз</label>
+          <input id="guestName" name="guestName" type="text" placeholder="Аты-жөніңіз" required>
+
+          <label for="guestPhone">Телефон</label>
+          <input id="guestPhone" name="guestPhone" type="tel" placeholder="+7 (___) ___-__-__" required>
+
+          <fieldset>
+            <legend>Тойға келесіз бе?</legend>
+            <label class="radio-option"><input type="radio" name="attendance" value="Қуана-қуана келемін!" required><span>Қуана-қуана келемін!</span></label>
+            <label class="radio-option"><input type="radio" name="attendance" value="Өкінішке орай, келе алмаймын."><span>Өкінішке орай, келе алмаймын.</span></label>
+          </fieldset>
+
+          <label for="guestWish">Той иесіне тілектеріңіз болса, жаза кетсеңіз болады</label>
+          <textarea id="guestWish" name="guestWish" rows="4" placeholder="Ақ тілегіңіз..."></textarea>
+          <button class="submit-button" type="submit">Жауапты жіберу <span>✧</span></button>
+          <p class="form-message" id="formMessage" role="status"></p>
+        </form>
+        <p class="privacy-note">Ескерту: бұл бастапқы нұсқада жауап осы браузерде ғана көрсетіледі. Қонақтардың жауаптарын жинау үшін Google Sheets немесе серверге қосу қажет.</p>
+      </section>
+
+      <footer class="footer">
+        <div class="footer-ornament">❧ ✦ ❧</div>
+        <p>Ақ дастарқан басында кездескенше!</p>
+        <h2>Мейірбек · 50 жас</h2>
+        <small>Ізтай әулеті</small>
+      </footer>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
