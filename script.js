@@ -1,100 +1,81 @@
-const doorGrid = document.getElementById("doorGrid");
-const door50Slot = document.getElementById("door50Slot");
-const palace = document.getElementById("palace");
+const grid = document.getElementById("doors-grid");
+const door50Slot = document.getElementById("door-50-slot");
+const openDoorBtn = document.getElementById("open-door-btn");
 const intro = document.getElementById("intro");
 const invitation = document.getElementById("invitation");
-const skipIntro = document.getElementById("skipIntro");
-let introFinished = false;
-let doorTimers = [];
 
-function createDoors() {
-  const fragment = document.createDocumentFragment();
-  for (let number = 1; number <= 49; number++) {
-    const door = document.createElement("div");
-    door.className = "door";
-    door.dataset.number = String(number);
-    door.setAttribute("aria-label", `${number}-есік`);
-    door.innerHTML = `
-      <div class="door-frame">
-        <div class="door-panel"></div>
-        <span class="door-number">${String(number).padStart(2, "0")}</span>
-      </div>`;
-    fragment.appendChild(door);
-  }
-  doorGrid.appendChild(fragment);
-
-  const door50 = document.createElement("div");
-  door50.className = "door special";
-  door50.dataset.number = "50";
-  door50.setAttribute("aria-label", "50-есік");
-  door50.innerHTML = `
+// 1. Создаем 49 дверей сверху и 50-ю парадную дверь внизу по центру
+for (let i = 1; i <= 49; i++) {
+  const door = document.createElement("div");
+  door.className = "door";
+  door.setAttribute("aria-label", `${i}-есік`);
+  door.innerHTML = `
     <div class="door-frame">
+      <div class="door-inner-glimpse"><span>50 ЖАС</span></div>
       <div class="door-panel"></div>
-      <span class="door-number">50</span>
+      <span class="door-number">${String(i).padStart(2, "0")}</span>
     </div>`;
-  door50Slot.appendChild(door50);
+  grid.appendChild(door);
 }
 
-function wait(ms) {
-  return new Promise(resolve => {
-    const timer = setTimeout(resolve, ms);
-    doorTimers.push(timer);
-  });
+const door50 = document.createElement("div");
+door50.className = "door special";
+door50.id = "door-50-slot-card";
+door50.setAttribute("aria-label", "50-есік");
+door50.innerHTML = `
+  <div class="door-frame">
+    <div class="door-inner-glimpse">
+      <span>МЕЙІРБЕК</span>
+      <span>50 ЖАС</span>
+    </div>
+    <div class="door-panel" id="door-50-leaf"></div>
+    <span class="door-number">50</span>
+  </div>`;
+door50Slot.appendChild(door50);
+
+// 2. Вступительная анимация: появление дворца и плавный наезд на 50-ю дверь
+let isOpened = false;
+const introTl = gsap.timeline({ delay: 0.25 });
+introTl
+  .from("#mansion-wrapper", { y: 45, opacity: 0, duration: 1.1, ease: "power3.out" })
+  .from(".door", { opacity: 0, y: 10, duration: 0.45, stagger: { amount: 0.9, from: "start" }, ease: "power2.out" }, "-=0.65")
+  .to("#mansion-wrapper", { scale: 2.05, duration: 1.7, ease: "power2.inOut" }, "+=0.25")
+  .to("#open-door-btn", { opacity: 1, duration: 0.5 }, "-=0.45");
+
+// 3. Открытие 50-й двери и провал камеры внутрь пригласительного
+function openFiftyDoor() {
+  if (isOpened) return;
+  isOpened = true;
+  introTl.kill();
+
+  const openTl = gsap.timeline();
+  openTl
+    .to("#open-door-btn", { opacity: 0, duration: 0.25 })
+    .to("#door-50-leaf", {
+      rotationY: -115,
+      duration: 1.15,
+      ease: "power2.inOut"
+    })
+    .to("#mansion-wrapper", {
+      scale: 16,
+      opacity: 0,
+      duration: 1.25,
+      ease: "power3.in"
+    }, "-=0.45")
+    .set("#intro", { display: "none" })
+    .set("#invitation", { display: "block" })
+    .to("#invitation", {
+      opacity: 1,
+      duration: 0.85,
+      ease: "power2.out",
+      onComplete: () => {
+        invitation.setAttribute("aria-hidden", "false");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    });
 }
 
-async function runIntro() {
-  if (introFinished) return;
-  const doors = [...document.querySelectorAll(".door")];
-
-  const scrollTimer = setTimeout(() => {
-    if (!introFinished && palace) {
-      palace.classList.add("pan-to-50");
-    }
-  }, 650);
-  doorTimers.push(scrollTimer);
-
-  for (let i = 0; i < doors.length; i++) {
-    if (introFinished) return;
-    doors[i].classList.add("visible");
-    await wait(i % 5 === 4 ? 140 : 65);
-  }
-
-  if (introFinished) return;
-  if (palace) palace.classList.add("spotlight-50");
-  const lastDoor = document.querySelector('.door[data-number="50"]');
-  if (lastDoor) lastDoor.classList.add("focused");
-
-  await wait(850);
-  if (introFinished) return;
-  if (lastDoor) lastDoor.classList.add("handle-turn");
-
-  await wait(450);
-  if (introFinished) return;
-  if (lastDoor) lastDoor.classList.add("opening");
-
-  await wait(2050);
-  revealInvitation();
-}
-
-function revealInvitation() {
-  if (introFinished) return;
-  introFinished = true;
-  doorTimers.forEach(clearTimeout);
-  intro.classList.add("fade-away");
-  intro.style.transition = "opacity 1s ease, transform 1s ease";
-  intro.style.opacity = "0";
-  intro.style.transform = "scale(1.025)";
-  setTimeout(() => {
-    intro.style.display = "none";
-    invitation.classList.add("show");
-    invitation.setAttribute("aria-hidden", "false");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, 850);
-}
-
-createDoors();
-setTimeout(runIntro, 450);
-skipIntro.addEventListener("click", revealInvitation);
+openDoorBtn.addEventListener("click", openFiftyDoor);
 
 // Музыка из файла WhatsApp Audio 2026-11-27 at 16.35.57.mpeg в папке проекта
 const audio = document.getElementById("backgroundMusic");
