@@ -7,7 +7,7 @@
   <title>Мейірбек — 50 жас мерейтойына шақыру</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Marck+Script&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -17,30 +17,42 @@
   <button class="music-toggle" id="musicToggle" type="button" aria-label="Музыканы қосу немесе тоқтату" title="Музыканы қосу / тоқтату">
     <span class="music-icon">♫</span><span class="music-label">Музыка</span>
   </button>
-  <audio id="backgroundMusic" loop></audio>
+  <!-- Положите файл music.mp3 в ту же папку, где лежит index.html -->
+  <audio id="backgroundMusic" src="music.mp3" loop preload="auto"></audio>
 
   <main>
     <section class="intro" id="intro" aria-label="Елу есік">
       <div class="intro-ornament ornament-top">❧ ❖ ❧</div>
       <p class="intro-kicker">ЕРЕКШЕ КҮНГЕ АРНАЛҒАН ШАҚЫРУ</p>
-      <h1 class="intro-title">Елу есік — бір мереке</h1>
-      <p class="intro-subtitle">Өзіңізге арналған есікті ашыңыз</p>
 
-      <div class="palace">
-        <div class="palace-roof">
-          <span class="roof-emblem">❖</span>
-          <span class="roof-line"></span>
-          <span class="roof-caption">ІЗТАЙ ӘУЛЕТІ</span>
+      <div class="palace-viewport">
+        <div class="palace" id="palace">
+          <div class="palace-roof">
+            <span class="roof-emblem">❖</span>
+            <span class="roof-line"></span>
+            <span class="roof-caption">ІЗТАЙ ӘУЛЕТІ</span>
+          </div>
+          <div class="palace-columns">
+            <div class="column"></div>
+            <div class="door-grid" id="doorGrid" aria-label="50 есік"></div>
+            <div class="column"></div>
+          </div>
+          <div class="palace-base"><span>✧</span> ✧ <span>✧</span></div>
         </div>
-        <div class="palace-columns">
-          <div class="column"></div>
-          <div class="door-grid" id="doorGrid" aria-label="50 есік"></div>
-          <div class="column"></div>
-        </div>
-        <div class="palace-base"><span>✧</span> ✧ <span>✧</span></div>
       </div>
-      <p class="intro-hint" id="introHint">50-нөмірлі есік сізді күтуде</p>
-      <div class="intro-ornament ornament-bottom">❧　✦　❧</div>
+
+      <!-- Крупный план 50-й двери перед открытием -->
+      <div class="door-closeup-stage" id="doorCloseupStage" aria-hidden="true">
+        <div class="closeup-frame" id="closeupFrame">
+          <div class="closeup-panel" id="closeupPanel">
+            <span class="closeup-ornament">❧</span>
+            <span class="closeup-number">50</span>
+            <span class="closeup-knob"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="intro-ornament ornament-bottom">❧ ✦ ❧</div>
       <button class="skip-intro" id="skipIntro" type="button">Шақыруды ашу</button>
     </section>
 
@@ -79,15 +91,8 @@
           <h2>Естеліктер</h2>
         </div>
         <div class="photo-card">
-          <div class="photo-placeholder" id="photoPlaceholder">
-            <span class="photo-ornament">❧</span>
-            <span class="photo-symbol">✧</span>
-            <strong>Мейірбектің бала кездегі суреті</strong>
-            <small>Әкеңіздің фотосуретін осы жерге жүктеңіз</small>
-          </div>
-          <img id="fatherPhoto" class="father-photo" alt="Мейірбектің бала кездегі фотосуреті" hidden>
-          <label class="upload-button" for="photoUpload">📷 Суретті жүктеу</label>
-          <input id="photoUpload" type="file" accept="image/*" hidden>
+          <!-- Положите фото под именем father.jpg в папку с сайтом -->
+          <img id="fatherPhoto" class="father-photo" src="father.jpg" alt="Мейірбектің бала кездегі фотосуреті">
         </div>
       </section>
 
@@ -124,7 +129,6 @@
             <p class="detail-label">Өтетін орны</p>
             <h3>Ресторан «Веранда»</h3>
             <p class="venue-note">Сіздерді жайлы әрі мерекелік көңіл-күйде күтеміз</p>
-            <!-- Қажет болса, осы жерге 2GIS/Google Maps сілтемесін қосыңыз -->
           </article>
         </div>
         <p class="late-note">Тойдың басталуы сағат 17:00-де. Асықпай, бірақ тез-тез келіңіздер! Орын бәріңізге жетеді, бастысы — көтеріңкі көңіл-күймен жетсеңіздер болғаны.</p>
