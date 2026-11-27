@@ -7,7 +7,7 @@
   <title>Мейірбек — 50 жас мерейтойына шақыру</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -20,9 +20,10 @@
   <audio id="backgroundMusic" src="audio.mpeg" loop preload="auto"></audio>
 
   <main>
-    <section class="intro" id="intro" aria-label="Сарай және елу есік">
+    <!-- СЦЕНА 1: ДВОРЕЦ С 49 ДВЕРЯМИ (7x7) + ПАРАДНАЯ 50-Я ПО ЦЕНТРУ -->
+    <section class="intro" id="scene-container" aria-label="Сарай және елу есік">
       <div class="intro-ornament ornament-top">❧ ❖ ❧</div>
-      <p class="intro-kicker">ЕРЕКШЕ КҮНГЕ АРНАЛҒАН ШАҚЫРУ</p>
+      <p class="intro-kicker" id="hint-text">ЕРЕКШЕ КҮНГЕ АРНАЛҒАН ШАҚЫРУ</p>
 
       <div id="mansion-wrapper" class="mansion-wrapper">
         <div class="palace" id="palace">
@@ -37,8 +38,7 @@
           <div class="palace-columns">
             <div class="column"></div>
             <div class="facade-center">
-              <div class="door-grid" id="doors-grid" aria-label="49 есік"></div>
-              <div class="door-50-slot" id="door-50-slot" aria-label="50-есік"></div>
+              <div id="doors-grid" aria-label="50 есік"></div>
             </div>
             <div class="column"></div>
           </div>
@@ -48,9 +48,10 @@
       </div>
 
       <div class="intro-ornament ornament-bottom">❧ ✦ ❧</div>
-      <button class="skip-intro" id="open-door-btn" type="button">50-есікке кіру</button>
+      <button class="skip-intro" id="open-door-btn" type="button">50-ші есікті ашу</button>
     </section>
 
+    <!-- СЦЕНА 2: ПРИГЛАСИТЕЛЬНЫЙ -->
     <section class="invitation" id="invitation" aria-hidden="true">
       <header class="hero">
         <div class="hero-frame">
@@ -149,10 +150,9 @@
 
           <label for="guestWish">Той иесіне тілектеріңіз болса, жаза кетсеңіз болады</label>
           <textarea id="guestWish" name="guestWish" rows="4" placeholder="Ақ тілегіңіз..."></textarea>
-          <button class="submit-button" type="submit">Жауапты жіберу <span>✧</span></button>
+          <button class="submit-button" id="submitBtn" type="submit">Жауапты жіберу <span>✧</span></button>
           <p class="form-message" id="formMessage" role="status"></p>
         </form>
-        <p class="privacy-note">Рақмет!.</p>
       </section>
 
       <footer class="footer">
@@ -164,7 +164,7 @@
     </section>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
