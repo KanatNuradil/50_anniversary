@@ -5,6 +5,8 @@ const invitation = document.getElementById("invitation");
 const skipIntro = document.getElementById("skipIntro");
 const doorCloseupStage = document.getElementById("doorCloseupStage");
 const closeupPanel = document.getElementById("closeupPanel");
+const closeupKnob = document.getElementById("closeupKnob");
+const closeupLightBeam = document.getElementById("closeupLightBeam");
 let introFinished = false;
 let doorTimers = [];
 
@@ -36,7 +38,7 @@ async function runIntro() {
   if (introFinished) return;
   const doors = [...document.querySelectorAll(".door")];
 
-  // Плавный спуск вступления от начала дома до 50-й двери
+  // Плавный спуск сцены от верха дворца вниз к 50-й двери
   const scrollTimer = setTimeout(() => {
     if (!introFinished && palace) {
       palace.classList.add("scroll-to-50");
@@ -44,7 +46,7 @@ async function runIntro() {
   }, 500);
   doorTimers.push(scrollTimer);
 
-  // Более медленное и плавное проявление дверей сверху вниз
+  // Постепенное проявление дверей сверху вниз
   for (let i = 0; i < doors.length; i++) {
     if (introFinished) return;
     doors[i].classList.add("visible");
@@ -55,21 +57,24 @@ async function runIntro() {
   await wait(700);
   if (introFinished) return;
 
-  // Крупный план 50-й двери перед открытием
+  // Крупный план 50-й двери
   if (palace) palace.classList.add("fade-out");
   if (doorCloseupStage) {
     doorCloseupStage.classList.add("active");
     doorCloseupStage.setAttribute("aria-hidden", "false");
   }
 
-  await wait(1150);
+  await wait(900);
   if (introFinished) return;
 
-  if (closeupPanel) {
-    closeupPanel.classList.add("open");
-  }
+  if (closeupKnob) closeupKnob.classList.add("turned");
+  await wait(420);
+  if (introFinished) return;
 
-  await wait(2250);
+  if (closeupLightBeam) closeupLightBeam.classList.add("glow");
+  if (closeupPanel) closeupPanel.classList.add("open");
+
+  await wait(2200);
   revealInvitation();
 }
 
@@ -80,7 +85,7 @@ function revealInvitation() {
   intro.classList.add("fade-away");
   intro.style.transition = "opacity 1.1s ease, transform 1.1s ease";
   intro.style.opacity = "0";
-  intro.style.transform = "scale(1.025)";
+  intro.style.transform = "scale(1.03)";
   setTimeout(() => {
     intro.style.display = "none";
     invitation.classList.add("show");
@@ -93,7 +98,7 @@ createDoors();
 setTimeout(runIntro, 500);
 skipIntro.addEventListener("click", revealInvitation);
 
-// Музыка из файла music.mp3 в папке проекта
+// Музыка из файла WhatsApp Audio 2026-11-27 at 16.35.57.mpeg в папке проекта
 const audio = document.getElementById("backgroundMusic");
 const musicToggle = document.getElementById("musicToggle");
 
