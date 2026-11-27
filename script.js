@@ -1,8 +1,10 @@
 const doorGrid = document.getElementById("doorGrid");
+const palace = document.getElementById("palace");
 const intro = document.getElementById("intro");
 const invitation = document.getElementById("invitation");
-const introHint = document.getElementById("introHint");
 const skipIntro = document.getElementById("skipIntro");
+const doorCloseupStage = document.getElementById("doorCloseupStage");
+const closeupPanel = document.getElementById("closeupPanel");
 let introFinished = false;
 let doorTimers = [];
 
@@ -33,19 +35,41 @@ function wait(ms) {
 async function runIntro() {
   if (introFinished) return;
   const doors = [...document.querySelectorAll(".door")];
+
+  // Плавный спуск вступления от начала дома до 50-й двери
+  const scrollTimer = setTimeout(() => {
+    if (!introFinished && palace) {
+      palace.classList.add("scroll-to-50");
+    }
+  }, 500);
+  doorTimers.push(scrollTimer);
+
+  // Более медленное и плавное проявление дверей сверху вниз
   for (let i = 0; i < doors.length; i++) {
     if (introFinished) return;
     doors[i].classList.add("visible");
-    // Бір қатардағы есіктер бірінен соң бірі, қатарлар аздап кідіріспен көрінеді.
-    await wait(i % 5 === 4 ? 105 : 55);
+    await wait(i % 5 === 4 ? 190 : 95);
   }
+
   if (introFinished) return;
-  introHint.textContent = "Алтыншы емес — дәл 50-нөмірлі есік!";
-  await wait(850);
+  await wait(700);
   if (introFinished) return;
-  const lastDoor = document.querySelector('.door[data-number="50"]');
-  lastDoor.classList.add("opening");
-  await wait(1900);
+
+  // Крупный план 50-й двери перед открытием
+  if (palace) palace.classList.add("fade-out");
+  if (doorCloseupStage) {
+    doorCloseupStage.classList.add("active");
+    doorCloseupStage.setAttribute("aria-hidden", "false");
+  }
+
+  await wait(1150);
+  if (introFinished) return;
+
+  if (closeupPanel) {
+    closeupPanel.classList.add("open");
+  }
+
+  await wait(2250);
   revealInvitation();
 }
 
@@ -54,7 +78,7 @@ function revealInvitation() {
   introFinished = true;
   doorTimers.forEach(clearTimeout);
   intro.classList.add("fade-away");
-  intro.style.transition = "opacity 1s ease, transform 1s ease";
+  intro.style.transition = "opacity 1.1s ease, transform 1.1s ease";
   intro.style.opacity = "0";
   intro.style.transform = "scale(1.025)";
   setTimeout(() => {
@@ -62,49 +86,19 @@ function revealInvitation() {
     invitation.classList.add("show");
     invitation.setAttribute("aria-hidden", "false");
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, 850);
+  }, 950);
 }
+
 createDoors();
-setTimeout(runIntro, 450);
+setTimeout(runIntro, 500);
 skipIntro.addEventListener("click", revealInvitation);
 
-// Әкеңіздің бала кездегі суретін таңдап, бірден алдын ала көру.
-const photoUpload = document.getElementById("photoUpload");
-const fatherPhoto = document.getElementById("fatherPhoto");
-const photoPlaceholder = document.getElementById("photoPlaceholder");
-let photoObjectUrl = null;
-photoUpload.addEventListener("change", event => {
-  const file = event.target.files && event.target.files[0];
-  if (!file) return;
-  if (!file.type.startsWith("image/")) {
-    alert("Сурет файлын таңдаңыз.");
-    return;
-  }
-  if (photoObjectUrl) URL.revokeObjectURL(photoObjectUrl);
-  photoObjectUrl = URL.createObjectURL(file);
-  fatherPhoto.src = photoObjectUrl;
-  fatherPhoto.hidden = false;
-  photoPlaceholder.hidden = true;
-});
-
-// Музыканы қолданушы өзі жүктейді. Браузер autoplay шектеулеріне байланысты,
-// дыбыс тек батырманы басқаннан кейін қосылады.
+// Музыка из файла music.mp3 в папке проекта
 const audio = document.getElementById("backgroundMusic");
 const musicToggle = document.getElementById("musicToggle");
-let audioObjectUrl = null;
-let audioReady = false;
-
-const musicUpload = document.createElement("input");
-musicUpload.type = "file";
-musicUpload.accept = "audio/*";
-musicUpload.hidden = true;
-document.body.appendChild(musicUpload);
 
 musicToggle.addEventListener("click", async () => {
-  if (!audioReady) {
-    musicUpload.click();
-    return;
-  }
+  if (!audio) return;
   if (audio.paused) {
     try {
       await audio.play();
@@ -120,27 +114,7 @@ musicToggle.addEventListener("click", async () => {
   }
 });
 
-musicUpload.addEventListener("change", async event => {
-  const file = event.target.files && event.target.files[0];
-  if (!file) return;
-  if (!file.type.startsWith("audio/")) {
-    alert("Аудио файл таңдаңыз (MP3, WAV және т.б.).");
-    return;
-  }
-  if (audioObjectUrl) URL.revokeObjectURL(audioObjectUrl);
-  audioObjectUrl = URL.createObjectURL(file);
-  audio.src = audioObjectUrl;
-  audioReady = true;
-  try {
-    await audio.play();
-    musicToggle.classList.add("playing");
-    musicToggle.querySelector(".music-label").textContent = "Тоқтату";
-  } catch (error) {
-    musicToggle.querySelector(".music-label").textContent = "Қосу";
-  }
-});
-
-// RSVP формасының демонстрациялық әрекеті. Деректер серверге жіберілмейді.
+// RSVP формасының демонстрациялық әрекеті
 const rsvpForm = document.getElementById("rsvpForm");
 const formMessage = document.getElementById("formMessage");
 rsvpForm.addEventListener("submit", event => {
@@ -153,7 +127,7 @@ rsvpForm.addEventListener("submit", event => {
   rsvpForm.reset();
 });
 
-// Жеңіл алтын шаң бөлшектері.
+// Жеңіл алтын шаң бөлшектері
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 let particles = [];
