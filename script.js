@@ -1,56 +1,40 @@
+// 1. Генерируем 50 дверей (7 рядов по 7 дверей = 49 + парадная 50-я по центру снизу)
 const grid = document.getElementById("doors-grid");
-const door50Slot = document.getElementById("door-50-slot");
-const openDoorBtn = document.getElementById("open-door-btn");
-const intro = document.getElementById("intro");
-const invitation = document.getElementById("invitation");
+for (let i = 1; i <= 50; i++) {
+  const slot = document.createElement("div");
+  slot.className = "door-slot";
 
-// 1. Создаем 49 дверей сверху и 50-ю парадную дверь внизу по центру
-for (let i = 1; i <= 49; i++) {
-  const door = document.createElement("div");
-  door.className = "door";
-  door.setAttribute("aria-label", `${i}-есік`);
-  door.innerHTML = `
-    <div class="door-frame">
-      <div class="door-inner-glimpse"><span>50 ЖАС</span></div>
-      <div class="door-panel"></div>
-      <span class="door-number">${String(i).padStart(2, "0")}</span>
-    </div>`;
-  grid.appendChild(door);
+  if (i === 50) {
+    slot.classList.add("door-50");
+    slot.id = "door-50-slot";
+    slot.innerHTML = `
+      <div class="door-leaf" id="door-50-leaf">
+        <span class="door-50-number">50</span>
+        <span class="door-50-sub">ЖАС</span>
+      </div>
+    `;
+  } else {
+    slot.textContent = i;
+  }
+  grid.appendChild(slot);
 }
 
-const door50 = document.createElement("div");
-door50.className = "door special";
-door50.id = "door-50-slot-card";
-door50.setAttribute("aria-label", "50-есік");
-door50.innerHTML = `
-  <div class="door-frame">
-    <div class="door-inner-glimpse">
-      <span>МЕЙІРБЕК</span>
-      <span>50 ЖАС</span>
-    </div>
-    <div class="door-panel" id="door-50-leaf"></div>
-    <span class="door-number">50</span>
-  </div>`;
-door50Slot.appendChild(door50);
-
-// 2. Вступительная анимация: появление дворца и плавный наезд на 50-ю дверь
-let isOpened = false;
-const introTl = gsap.timeline({ delay: 0.25 });
+// 2. Вступительная анимация: плавный наезд камеры на 50-ю дверь
+const introTl = gsap.timeline({ delay: 0.3 });
 introTl
   .from("#mansion-wrapper", { y: 45, opacity: 0, duration: 1.1, ease: "power3.out" })
-  .from(".door", { opacity: 0, y: 10, duration: 0.45, stagger: { amount: 0.9, from: "start" }, ease: "power2.out" }, "-=0.65")
-  .to("#mansion-wrapper", { scale: 2.05, duration: 1.7, ease: "power2.inOut" }, "+=0.25")
-  .to("#open-door-btn", { opacity: 1, duration: 0.5 }, "-=0.45");
+  .to("#mansion-wrapper", { scale: 2.05, duration: 1.7, ease: "power2.inOut" }, "+=0.3")
+  .to(["#hint-text", "#open-door-btn"], { opacity: 1, duration: 0.6 }, "-=0.5");
 
-// 3. Открытие 50-й двери и провал камеры внутрь пригласительного
+// 3. Открытие 50-й двери по клику и провал внутрь пригласительного
+let isOpened = false;
 function openFiftyDoor() {
   if (isOpened) return;
   isOpened = true;
-  introTl.kill();
 
   const openTl = gsap.timeline();
   openTl
-    .to("#open-door-btn", { opacity: 0, duration: 0.25 })
+    .to(["#hint-text", "#open-door-btn"], { opacity: 0, duration: 0.25 })
     .to("#door-50-leaf", {
       rotationY: -115,
       duration: 1.15,
@@ -62,22 +46,23 @@ function openFiftyDoor() {
       duration: 1.25,
       ease: "power3.in"
     }, "-=0.45")
-    .set("#intro", { display: "none" })
+    .set("#scene-container", { display: "none" })
     .set("#invitation", { display: "block" })
     .to("#invitation", {
       opacity: 1,
       duration: 0.85,
       ease: "power2.out",
       onComplete: () => {
-        invitation.setAttribute("aria-hidden", "false");
+        document.getElementById("invitation").setAttribute("aria-hidden", "false");
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
     });
 }
 
-openDoorBtn.addEventListener("click", openFiftyDoor);
+document.getElementById("door-50-slot").addEventListener("click", openFiftyDoor);
+document.getElementById("open-door-btn").addEventListener("click", openFiftyDoor);
 
-// Музыка из файла WhatsApp Audio 2026-11-27 at 16.35.57.mpeg в папке проекта
+// 4. Музыка из файла WhatsApp Audio 2026-11-27 at 16.35.57.mpeg
 const audio = document.getElementById("backgroundMusic");
 const musicToggle = document.getElementById("musicToggle");
 
@@ -98,20 +83,67 @@ musicToggle.addEventListener("click", async () => {
   }
 });
 
-// RSVP формасының демонстрациялық әрекеті
-const rsvpForm = document.getElementById("rsvpForm");
-const formMessage = document.getElementById("formMessage");
-rsvpForm.addEventListener("submit", event => {
-  event.preventDefault();
-  if (!rsvpForm.reportValidity()) return;
-  const data = new FormData(rsvpForm);
-  const guest = String(data.get("guestName") || "").trim();
-  const attendance = data.get("attendance");
-  formMessage.textContent = `Рақмет, ${guest}! Жауабыңыз: ${attendance}`;
-  rsvpForm.reset();
+// 5. Автоформатирование телефона +7 (___) ___-__-__
+const phoneInput = document.getElementById("guestPhone");
+phoneInput.addEventListener("input", e => {
+  let digits = e.target.value.replace(/\D/g, "");
+  if (digits.startsWith("7") || digits.startsWith("8")) digits = digits.substring(1);
+  digits = digits.substring(0, 10);
+
+  let formatted = "+7";
+  if (digits.length > 0) formatted += " (" + digits.substring(0, 3);
+  if (digits.length >= 4) formatted += ") " + digits.substring(3, 6);
+  if (digits.length >= 7) formatted += "-" + digits.substring(6, 8);
+  if (digits.length >= 9) formatted += "-" + digits.substring(8, 10);
+
+  e.target.value = digits.length > 0 ? formatted : "";
 });
 
-// Жеңіл алтын шаң бөлшектері
+// 6. Отправка ответов формы в Google Sheets
+// Вставьте сюда URL вашего развернутого веб-приложения Google Apps Script:
+const GOOGLE_SHEETS_WEB_APP_URL = "https://script.google.com/macros/s/ВСТАВЬТЕ_ВАШ_ID/exec";
+
+const rsvpForm = document.getElementById("rsvpForm");
+const formMessage = document.getElementById("formMessage");
+const submitBtn = document.getElementById("submitBtn");
+
+rsvpForm.addEventListener("submit", async event => {
+  event.preventDefault();
+  if (!rsvpForm.reportValidity()) return;
+
+  const data = new FormData(rsvpForm);
+  const payload = {
+    name: String(data.get("guestName") || "").trim(),
+    phone: String(data.get("guestPhone") || "").trim(),
+    attendance: String(data.get("attendance") || ""),
+    wish: String(data.get("guestWish") || "").trim(),
+    timestamp: new Date().toLocaleString("ru-RU")
+  };
+
+  submitBtn.disabled = true;
+  formMessage.style.color = "#806b68";
+  formMessage.textContent = "Жіберілуде...";
+
+  try {
+    await fetch(GOOGLE_SHEETS_WEB_APP_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+
+    formMessage.style.color = "#47634a";
+    formMessage.textContent = `Рақмет, ${payload.name}! Жауабыңыз сақталды.`;
+    rsvpForm.reset();
+  } catch (err) {
+    formMessage.style.color = "#8a1c2e";
+    formMessage.textContent = "Қате кетті. Қайта байқап көріңіз.";
+  } finally {
+    submitBtn.disabled = false;
+  }
+});
+
+// 7. Парящие золотые частицы на Canvas
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 let particles = [];
