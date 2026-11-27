@@ -1,20 +1,17 @@
 const doorGrid = document.getElementById("doorGrid");
+const door50Slot = document.getElementById("door50Slot");
 const palace = document.getElementById("palace");
 const intro = document.getElementById("intro");
 const invitation = document.getElementById("invitation");
 const skipIntro = document.getElementById("skipIntro");
-const doorCloseupStage = document.getElementById("doorCloseupStage");
-const closeupPanel = document.getElementById("closeupPanel");
-const closeupKnob = document.getElementById("closeupKnob");
-const closeupLightBeam = document.getElementById("closeupLightBeam");
 let introFinished = false;
 let doorTimers = [];
 
 function createDoors() {
   const fragment = document.createDocumentFragment();
-  for (let number = 1; number <= 50; number++) {
+  for (let number = 1; number <= 49; number++) {
     const door = document.createElement("div");
-    door.className = "door" + (number === 50 ? " special" : "");
+    door.className = "door";
     door.dataset.number = String(number);
     door.setAttribute("aria-label", `${number}-есік`);
     door.innerHTML = `
@@ -25,6 +22,17 @@ function createDoors() {
     fragment.appendChild(door);
   }
   doorGrid.appendChild(fragment);
+
+  const door50 = document.createElement("div");
+  door50.className = "door special";
+  door50.dataset.number = "50";
+  door50.setAttribute("aria-label", "50-есік");
+  door50.innerHTML = `
+    <div class="door-frame">
+      <div class="door-panel"></div>
+      <span class="door-number">50</span>
+    </div>`;
+  door50Slot.appendChild(door50);
 }
 
 function wait(ms) {
@@ -38,43 +46,33 @@ async function runIntro() {
   if (introFinished) return;
   const doors = [...document.querySelectorAll(".door")];
 
-  // Плавный спуск сцены от верха дворца вниз к 50-й двери
   const scrollTimer = setTimeout(() => {
     if (!introFinished && palace) {
-      palace.classList.add("scroll-to-50");
+      palace.classList.add("pan-to-50");
     }
-  }, 500);
+  }, 650);
   doorTimers.push(scrollTimer);
 
-  // Постепенное проявление дверей сверху вниз
   for (let i = 0; i < doors.length; i++) {
     if (introFinished) return;
     doors[i].classList.add("visible");
-    await wait(i % 5 === 4 ? 190 : 95);
+    await wait(i % 5 === 4 ? 140 : 65);
   }
 
   if (introFinished) return;
-  await wait(700);
+  if (palace) palace.classList.add("spotlight-50");
+  const lastDoor = document.querySelector('.door[data-number="50"]');
+  if (lastDoor) lastDoor.classList.add("focused");
+
+  await wait(850);
   if (introFinished) return;
+  if (lastDoor) lastDoor.classList.add("handle-turn");
 
-  // Крупный план 50-й двери
-  if (palace) palace.classList.add("fade-out");
-  if (doorCloseupStage) {
-    doorCloseupStage.classList.add("active");
-    doorCloseupStage.setAttribute("aria-hidden", "false");
-  }
-
-  await wait(900);
+  await wait(450);
   if (introFinished) return;
+  if (lastDoor) lastDoor.classList.add("opening");
 
-  if (closeupKnob) closeupKnob.classList.add("turned");
-  await wait(420);
-  if (introFinished) return;
-
-  if (closeupLightBeam) closeupLightBeam.classList.add("glow");
-  if (closeupPanel) closeupPanel.classList.add("open");
-
-  await wait(2200);
+  await wait(2050);
   revealInvitation();
 }
 
@@ -83,19 +81,19 @@ function revealInvitation() {
   introFinished = true;
   doorTimers.forEach(clearTimeout);
   intro.classList.add("fade-away");
-  intro.style.transition = "opacity 1.1s ease, transform 1.1s ease";
+  intro.style.transition = "opacity 1s ease, transform 1s ease";
   intro.style.opacity = "0";
-  intro.style.transform = "scale(1.03)";
+  intro.style.transform = "scale(1.025)";
   setTimeout(() => {
     intro.style.display = "none";
     invitation.classList.add("show");
     invitation.setAttribute("aria-hidden", "false");
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, 950);
+  }, 850);
 }
 
 createDoors();
-setTimeout(runIntro, 500);
+setTimeout(runIntro, 450);
 skipIntro.addEventListener("click", revealInvitation);
 
 // Музыка из файла WhatsApp Audio 2026-11-27 at 16.35.57.mpeg в папке проекта
